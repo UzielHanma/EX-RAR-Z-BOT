@@ -86,15 +86,24 @@ async function startBot() {
 
         try {
             let user = db.data.users.find(u => u.id === sender);
-            if (!user) {
-                user = { id: sender, coins: 500, inventory: [], lastDaily: 0 };
-                db.data.users.push(user);
-                await db.write();
-            }
-
+	if (!user) {
+   	 user = { 
+        id: sender, 
+        coins: 500, 
+        inventory: [], 
+        lastDaily: 0,
+        lastWork: 0,
+        xp: 0,           // NUEVO
+        level: 1,        // NUEVO
+        marry: null,     // NUEVO
+        isPremium: false // NUEVO
+    };
+    db.data.users.push(user);
+ 	   await db.write();
+}
             // AQUÍ LLAMAMOS AL MANEJADOR DE COMANDOS
             // Nota: El handler ahora recibirá el comando SIN el punto/prefijo (ej: "help")
-            await handleCommand(sock, from, command, user, db, sender);
+            await handleCommand(sock, from, command, user, db, sender, msg);
 
         } catch (err) {
             console.error("❌ Error en el sistema de mensajes:", err);
